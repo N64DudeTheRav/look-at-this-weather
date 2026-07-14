@@ -84,8 +84,8 @@ The application may be published to container registries via CI/CD.
 Pull and run the latest image (example):
 
 ```bash
-docker pull ghcr.io/tropometrics/look-at-this-weather:main
-docker run -p 80:80 ghcr.io/tropometrics/look-at-this-weather:main
+docker pull ghcr.io/N64DudeTheRav/look-at-this-weather:main
+docker run -p 80:80 ghcr.io/N64DudeTheRav/look-at-this-weather:main
 ```
 
 ### Building Locally (embed API base at build time)
@@ -93,18 +93,22 @@ docker run -p 80:80 ghcr.io/tropometrics/look-at-this-weather:main
 Pass VITE_API_BASE_URL as a build-arg so the value is embedded into Vite's build (import.meta.env):
 
 ```bash
-docker build --build-arg VITE_API_BASE_URL=https://api.odspieg.nl -t look-at-this-weather:custom .
-docker run -p 80:80 look-at-this-weather:custom
+docker build --build-arg VITE_API_BASE_URL=https://api-tropometrics.odspieg.nl -t look-at-this-weather:api-tropometrics-1 .
+# optionally push to GHCR:
+# docker tag look-at-this-weather:api-tropometrics-1 ghcr.io/N64DudeTheRav/look-at-this-weather:api-tropometrics-1
+# docker push ghcr.io/N64DudeTheRav/look-at-this-weather:api-tropometrics-1
+
+docker run -p 80:80 look-at-this-weather:api-tropometrics-1
 ```
 
-This embeds the API base into the built static files. When no build-arg is provided, the app defaults to `https://api.odspieg.nl`.
+This embeds the API base into the built static files. When no build-arg is provided, the app defaults to `https://api-tropometrics.odspieg.nl`.
 
 ### Runtime override (optional)
 
 A small runtime hook is included to allow overriding the API host at container start. Provide the env var when running to have the container write a runtime config.json into the served static files:
 
 ```bash
-docker run -e VITE_API_BASE_URL=https://api.odspieg.nl -p 80:80 look-at-this-weather:custom
+docker run -e VITE_API_BASE_URL=https://api-tropometrics.odspieg.nl -p 80:80 look-at-this-weather:api-tropometrics-1
 ```
 
 Kubernetes example (deployment snippet):
@@ -112,7 +116,7 @@ Kubernetes example (deployment snippet):
 ```yaml
 env:
   - name: VITE_API_BASE_URL
-    value: "https://api.odspieg.nl"
+    value: "https://api-tropometrics.odspieg.nl"
 ```
 
 The frontend will prefer an explicitly provided runtime config.json if present, otherwise it uses the build-time embedded value.

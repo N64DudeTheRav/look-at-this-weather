@@ -1,2 +1,9 @@
 /// <reference types="vite/client" />
-VITE_API_BASE_URL || 'https://api-tropometrics.odspieg.nl'
+
+interface ImportMetaEnv {
+  readonly VITE_API_BASE_URL?: string; // default: https://api-tropometrics.odspieg.nl
+}
+
+interface ImportMeta {
+  readonly env: ImportMetaEnv;
+}

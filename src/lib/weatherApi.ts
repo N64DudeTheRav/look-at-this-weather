@@ -38,7 +38,7 @@ export interface WeatherData {
 export async function fetchWeatherData(latitude: number, longitude: number): Promise<WeatherData> {
   console.log("Fetching weather for coordinates:", { latitude, longitude });
   
-  const BASE_URL = import.meta.env.VITE_API_BASE_URL || 'https://api.odspieg.nl';
+  const BASE_URL = import.meta.env.VITE_API_BASE_URL || 'https://api-tropometrics.odspieg.nl';
 
   const response = await fetch(`${BASE_URL}/v1/forecast?latitude=${latitude}&longitude=${longitude}&current=temperature_2m,relative_humidity_2m,apparent_temperature,precipitation,weather_code,cloud_cover,pressure_msl,surface_pressure,wind_speed_10m,wind_direction_10m,wind_gusts_10m,uv_index&hourly=temperature_2m,weather_code,precipitation_probability,wind_speed_10m,wind_direction_10m,wind_gusts_10m,relative_humidity_2m&daily=weather_code,temperature_2m_max,temperature_2m_min,sunrise,sunset&timezone=auto&forecast_days=7`);
 
