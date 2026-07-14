@@ -11,9 +11,9 @@ RUN git clone https://github.com/TropoMetrics/look-at-this-weather.git .
 
 # Installeer dependencies en bouw het project
 ARG VITE_API_BASE_URL
-ENV VITE_API_BASE_URL=$https://api-tropometrics.odspieg.nl/
+# Install deps, then pass build-arg into the build command so Vite sees it as import.meta.env
 RUN npm install
-RUN npm run build
+RUN VITE_API_BASE_URL="$VITE_API_BASE_URL" npm run build
 
 # STAGE 2: De serveerfase
 FROM nginx:alpine
@@ -21,7 +21,9 @@ FROM nginx:alpine
 # Kopieer de gebouwde bestanden uit de vorige fase naar Nginx
 # Vite bouwt standaard naar de 'dist' map
 COPY --from=builder /app/dist /usr/share/nginx/html
+COPY docker-entrypoint.sh /docker-entrypoint.sh
+RUN chmod +x /docker-entrypoint.sh
 
 EXPOSE 80
 
-CMD ["nginx", "-g", "daemon off;"]
+ENTRYPOINT ["/docker-entrypoint.sh"]
