@@ -10,6 +10,8 @@ WORKDIR /app
 RUN git clone https://github.com/TropoMetrics/look-at-this-weather.git .
 
 # Installeer dependencies en bouw het project
+ARG VITE_API_BASE_URL
+ENV VITE_API_BASE_URL=$https://api-tropometrics.odspieg.nl/
 RUN npm install
 RUN npm run build
 
